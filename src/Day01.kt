@@ -13,34 +13,19 @@ fun main() {
         }
     }
 
-
-     fun countCrossings(start: Int, end: Int, amount: Int, direction: Char): Int {
-        if (amount == 0) return 0
-
-        val completeRotations = amount / 100
-        val remainder = amount % 100
-
-        val partialCrossing = when (direction) {
-            'R' -> if (start + remainder >= 100) 1 else 0
-            'L' -> if (start - remainder < 0) 1 else 0
-            else -> 0
-        }
-
-        return completeRotations + partialCrossing
-    }
-
     fun part2(rotations:  List<Pair<Char, Int>>): Int {
         var dial = 50
 
-        return rotations.sumOf { (direction, amount) ->
-            val newPosition = when (direction) {
-                'R' -> (dial + amount).mod(100)
-                else -> (dial - amount).mod(100)
+        return rotations.sumOf { (dir, amount) ->
+            var loops = 0
+            repeat(amount) {
+                dial = when (dir) {
+                    'R' -> (dial + 1) % 100
+                    else -> (dial - 1).mod(100)
+                }
+                if(dial == 0) loops++
             }
-
-            val crossings = countCrossings(dial, newPosition, amount, direction)
-            dial = newPosition
-            crossings
+            loops
         }
     }
 
@@ -51,9 +36,9 @@ fun main() {
 
     val testInput = parseInput(readInput("Day01_test"))
     check(part1(testInput) == 3)
-    part2(testInput).println()
+    check(part2(testInput) == 6)
 
     val input = parseInput(readInput("Day01"))
     check(part1(input) == 1040)
-    part2(input).println() // more than 2583 -- less than 6038
+    check(part2(input) == 6027)
 }
