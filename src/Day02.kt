@@ -5,6 +5,11 @@ fun String.isRepeatedTwice(): Boolean {
     return this.take(half) == this.substring(half)
 }
 
+fun String.isInvalid(): Boolean {
+    val doubled = this + this
+    return doubled.drop(1).dropLast(1).contains(this)
+}
+
 private fun part1(input: List<LongRange>): Long {
     var count = 0L
     for(range in input) {
@@ -17,8 +22,16 @@ private fun part1(input: List<LongRange>): Long {
     return count
 }
 
-private fun part2(input: List<LongRange>): Int {
-    return 0
+private fun part2(input: List<LongRange>): Long {
+    var count = 0L
+    for(range in input) {
+        for(i in range) {
+            if(i.toString().isInvalid()) {
+                count += i
+            }
+        }
+    }
+    return count
 }
 
 private val parseInput = { input: List<String> ->
@@ -31,11 +44,10 @@ private val parseInput = { input: List<String> ->
 fun main() {
     val testInput = parseInput(readInput("Day02_test"))
     check(part1(testInput) == 1227775554L)
-//    check(part2(testInput) == 0)
-     
+    check(part2(testInput) == 4174379265)
+
     val input = parseInput(readInput("Day02"))
     check(part1(input) == 40214376723)
-//    check(part1(input) == 0)
-//    check(part2(input) == 0)
+    check(part2(input) == 50793864718)
 }
  
