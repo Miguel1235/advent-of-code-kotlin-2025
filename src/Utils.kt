@@ -19,3 +19,35 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
  * The cleaner shorthand for printing output.
  */
 fun Any?.println() = println(this)
+
+
+fun <T> List<T>.combinations(k: Int): List<List<T>> {
+    val results = mutableListOf<List<T>>()
+
+    fun backtrack(start: Int, current: MutableList<T>) {
+        if (current.size == k) {
+            results.add(current.toList())
+            return
+        }
+        for (i in start..this.lastIndex) {
+            current.add(this[i])
+            backtrack(i + 1, current)
+            current.removeLast()
+        }
+    }
+    backtrack(0, mutableListOf())
+    return results
+}
+
+fun <T> List<T>.permutations(): List<List<T>> {
+    if (size <= 1) return listOf(this)
+
+    val result = mutableListOf<List<T>>()
+    for (i in indices) {
+        val element = this[i]
+        val remaining = this.toMutableList().apply { removeAt(i) }
+        val perms = remaining.permutations()
+        result.addAll(perms.map { listOf(element) + it })
+    }
+    return result
+}

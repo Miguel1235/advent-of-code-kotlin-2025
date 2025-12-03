@@ -11,18 +11,18 @@ private fun getMaxBank(bank: String): Int {
     return max
 }
 
-private fun part2(input: List<String>): Int {
-    println(input)
-    return 0
+private fun part2(banks: List<String>): Long {
+    return banks.sumOf { bank ->
+        bank.toList().combinations(12).maxOf { it.joinToString("").toLong() }
+    }
 }
 
 fun main() {
     val testInput = readInput("Day03_test")
     check(part1(testInput) == 357)
-//    check(part2(testInput) == 0)
+    check(part2(testInput) == 3121910778619L)
      
     val input = readInput("Day03")
     check(part1(input) == 17229)
-//    check(part2(input) == 0)
 }
  
