@@ -51,3 +51,15 @@ fun <T> List<T>.permutations(): List<List<T>> {
     }
     return result
 }
+
+
+enum class Directions(val rowDelta: Int, val colDelta: Int) {
+    LEFT_UP(rowDelta = -1, colDelta = -1),
+    UP(-1, 0),
+    RIGHT_UP(-1, colDelta = 1),
+    LEFT_DOWN(1, colDelta = -1),
+    DOWN(1, 0),
+    RIGHT_DOWN(1, colDelta = 1),
+    LEFT(0, -1),
+    RIGHT(0, 1)
+}
