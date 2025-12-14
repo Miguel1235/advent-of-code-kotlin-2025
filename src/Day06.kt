@@ -1,3 +1,6 @@
+import kotlin.collections.first
+import kotlin.collections.takeLast
+
 private fun part1(input: List<List<String>>): Long {
     return input.sumOf {
         val op = it.takeLast(1).first()
@@ -8,51 +11,47 @@ private fun part1(input: List<List<String>>): Long {
         }
     }
 }
-fun transposeDigits(numbers: List<Long>): List<Long> {
-    // Sort by number of digits (descending)
-    val sorted = numbers.sortedByDescending { it.toString().length }
 
-    // Convert each number to a string
-    val numberStrings = sorted.map { it.toString() }
+fun normalize(input: List<String>): List<String> {
+    val rows = input.map { it.split(Regex("\\s+"), -1) }
 
-    // Find the maximum length
-    val maxLength = numberStrings.maxOfOrNull { it.length } ?: 0
-
-    val result = mutableListOf<Long>()
-
-    // Iterate through each digit position from right to left
-    for (i in 0 until maxLength) {
-        val digits = StringBuilder()
-
-        // For each number, get the digit at position i from the right
-        for (numStr in numberStrings) {
-            val positionFromRight = numStr.length - 1 - i
-            if (positionFromRight >= 0) {
-                digits.append(numStr[positionFromRight])
-            }
+    // Compute max width per column
+    val colWidths = rows
+        .flatten()
+        .indices
+        .groupBy { it }
+        .map { (col, _) ->
+            rows.maxOf { it.getOrNull(col)?.length ?: 0 }
         }
 
-        result.add(digits.toString().toLong())
+    // Pad each cell and replace padding with $
+    return rows.map { row ->
+        row.mapIndexed { i, cell ->
+            val padded = cell.padStart(colWidths[i], ' ')
+            padded.replace(' ', '$')
+        }.joinToString(" ")
     }
-
-    return result
 }
 
+private fun <T> List<List<T>>.transpose(): List<List<T>> =
+    first().indices.map { i -> map { it[i] } }
 
-private fun part2(input: List<List<String>>): Int {
-    val r = input.sumOf {
-        val op = it.takeLast(1).first()
-        val nums = it.dropLast(1).map { it.toLong() }
-//        println(nums)
-        val numbers = transposeDigits(nums)
-        println(numbers)
-        val r: Long = when(op) {
-            "+" -> numbers.sum()
-            else -> numbers.fold(1) { acc, number -> acc * number }
-        }
-//        println(r)
-        r
-    }
+
+
+private fun part2(input: List<String>): Int {
+    val normal = normalize(input)
+    println(normal)
+//    val r = normal.map { it.split(" ") }.transpose()
+//
+//    r.sumOf {
+//        val op = it.takeLast(1).first().filter { it != '$' }
+//        val numbers = it.dropLast(1)
+//
+//        println(op)
+//        println(numbers)
+//        1
+//    }
+
     return 0
 }
 
@@ -73,8 +72,8 @@ private fun parseInput(input: List<String>): List<List<String>> {
 
 
 fun main() {
-    val testInput = parseInput(readInput("Day06_test"))
-    check(part1(testInput) == 4277556L)
+    val testInput = readInput("Day06_test")
+    check(part1(parseInput(testInput)) == 4277556L)
     check(part2(testInput) == 0)
      
     val input = parseInput(readInput("Day06"))
