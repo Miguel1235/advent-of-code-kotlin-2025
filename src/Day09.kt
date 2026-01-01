@@ -1,27 +1,23 @@
 import kotlin.math.abs
 
-private fun part1(input: List<Tile>): Long {
-    val rectangles = input.combinations(2)
-
-    return rectangles.maxOf {
-        val (r1,c1) = it.first()
-        val (r2,c2) = it.last()
-        val base = abs(r1 - r2 )+ 1
-        val height = abs(c1 - c2)+ 1
-        base*height
-    }
-}
-
-private fun part2(input: List<String>): Int {
-    return 0
-}
-
 data class Tile(var r: Long, var c: Long)
 
 private val parseInput = { input: List<String> ->
     input.map {
-        val (r,c) = it.split(",")
+        val (r, c) = it.split(",")
         Tile(r.toLong(), c.toLong())
+    }
+}
+
+private fun part1(input: List<Tile>): Long {
+    val rectangles = input.combinations(2)
+
+    return rectangles.maxOf {
+        val (r1, c1) = it.first()
+        val (r2, c2) = it.last()
+        val base = abs(r1 - r2) + 1
+        val height = abs(c1 - c2) + 1
+        base * height
     }
 }
 
